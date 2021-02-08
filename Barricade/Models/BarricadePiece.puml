@@ -1,0 +1,6 @@
+@startuml
+class BarricadePiece {
+    + BarricadePiece(name:string)
+}
+Piece <|-- BarricadePiece
+@enduml

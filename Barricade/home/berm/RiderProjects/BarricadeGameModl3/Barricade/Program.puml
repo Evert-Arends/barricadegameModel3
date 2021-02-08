@@ -1,0 +1,6 @@
+@startuml
+class Program {
+    {static} <<async>> Main(args:string[]) : Task
+}
+Program --> "_gameController" GameController
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+abstract class Field {
+    + {abstract} <<override>> ToString() : string
+}
+class "List`1"<T> {
+}
+Field o-> "Pieces<Piece>" "List`1"
+Field --> "TempPiece" Piece
+Field --> "LeftConnectedField" Field
+Field --> "RightConnectedField" Field
+Field --> "TopConnectedField" Field
+Field --> "DownConnectedField" Field
+@enduml

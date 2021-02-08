@@ -1,0 +1,12 @@
+@startuml
+class GameController {
+    + GameController(lines:string[])
+    + RunGame() : void
+    - ViewData() : string[]
+    - {static} ToVerticalConnectionString(field:Field) : string
+    - {static} ToSquareConnectionString(field:Field) : string
+    + PieceMovement() : void
+}
+GameController --> "_gameView" GameView
+GameController --> "_gameModel" GameModel
+@enduml

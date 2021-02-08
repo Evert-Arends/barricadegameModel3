@@ -1,0 +1,11 @@
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/bin/Debug/netcoreapp3.1/Barricade
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/bin/Debug/netcoreapp3.1/Barricade.deps.json
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/bin/Debug/netcoreapp3.1/Barricade.runtimeconfig.json
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/bin/Debug/netcoreapp3.1/Barricade.runtimeconfig.dev.json
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/bin/Debug/netcoreapp3.1/Barricade.dll
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/bin/Debug/netcoreapp3.1/Barricade.pdb
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/obj/Debug/netcoreapp3.1/Barricade.csprojAssemblyReference.cache
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/obj/Debug/netcoreapp3.1/Barricade.AssemblyInfoInputs.cache
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/obj/Debug/netcoreapp3.1/Barricade.AssemblyInfo.cs
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/obj/Debug/netcoreapp3.1/Barricade.dll
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/obj/Debug/netcoreapp3.1/Barricade.pdb

@@ -1,0 +1,31 @@
+@startuml
+class GameModel {
+    - <<const>> AmountOfPlayers : int = 4
+    - _playerTurnNumber : int
+    + GameModel()
+    + MoveBarriers() : void
+    - MoveBarrier(barricadePiece:BarricadePiece) : void
+    - MoveAllowed(fieldFrom:Field, fieldTo:Field) : bool
+    + MovePieceUp() : bool
+    + MovePieceDown() : bool
+    + MovePieceLeft() : bool
+    + MovePieceRight() : bool
+    - MovePiece(connectedField:Field) : bool
+    - SetPieceActive(piece:Piece) : void
+    - ResetPiece(piece:Piece) : void
+    + MoveDone() : void
+    - NextPlayer() : void
+    + NextPiece() : void
+    + GenerateBoardField(lines:string[]) : void
+    - SetupPlayerField(item:char) : Field
+    - AddBarricadeToField() : Field
+    - CreateField(toString:char) : Field
+    - GeneratePlayers() : void
+}
+class "List`1"<T> {
+}
+GameModel o-> "BarricadePieces<BarricadePiece>" "List`1"
+GameModel o-> "_players<Player>" "List`1"
+GameModel --> "_activePiece" Piece
+GameModel o-> "Die" Die
+@enduml

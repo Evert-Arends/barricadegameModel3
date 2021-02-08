@@ -1,0 +1,7 @@
+@startuml
+class NormalField {
+    + NormalField()
+    + <<override>> ToString() : string
+}
+Field <|-- NormalField
+@enduml

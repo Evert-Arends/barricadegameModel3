@@ -1,0 +1,9 @@
+@startuml
+abstract class Piece {
+    # Name : string = ""
+    + <<override>> ToString() : string
+}
+Piece --> "PieceField" Field
+Piece --> "StartOutField" Field
+Piece o-> "FieldsWalked" Stack
+@enduml

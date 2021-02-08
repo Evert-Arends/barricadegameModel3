@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/home/berm/.dotnet/store/|arch|/|tfm|",
+      "/home/berm/.nuget/packages"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+@startuml
+class Village {
+}
+class "List`1"<T> {
+}
+Village o-> "Fields<Field>" "List`1"
+@enduml

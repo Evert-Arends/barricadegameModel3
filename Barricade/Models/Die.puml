@@ -1,0 +1,9 @@
+@startuml
+class Die {
+    + ThrowAmount : int
+    + ArchivedThrowAmount : int
+    + ThrowDie() : void
+    + RemoveOneEye() : void
+    + RevertThrownAmount() : void
+}
+@enduml

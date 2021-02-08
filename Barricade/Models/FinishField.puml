@@ -1,0 +1,6 @@
+@startuml
+class FinishField {
+    + <<override>> ToString() : string
+}
+Field <|-- FinishField
+@enduml

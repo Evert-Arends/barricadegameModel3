@@ -1,0 +1,7 @@
+@startuml
+class WoodField {
+    + WoodField()
+    + <<override>> ToString() : string
+}
+Field <|-- WoodField
+@enduml

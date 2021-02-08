@@ -1,0 +1,9 @@
+@startuml
+class Player {
+}
+class "List`1"<T> {
+}
+Player o-> "StartFields<Field>" "List`1"
+Player o-> "PlayerPieces<PlayerPiece>" "List`1"
+Player --> "ActivePlayerPiece" PlayerPiece
+@enduml

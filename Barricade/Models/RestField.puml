@@ -1,0 +1,7 @@
+@startuml
+class RestField {
+    + RestField()
+    + <<override>> ToString() : string
+}
+Field <|-- RestField
+@enduml

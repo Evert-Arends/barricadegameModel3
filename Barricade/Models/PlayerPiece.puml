@@ -1,0 +1,7 @@
+@startuml
+class PlayerPiece {
+    + PlayerPiece(name:string)
+}
+Piece <|-- PlayerPiece
+PlayerPiece --> "StartField" StartField
+@enduml
