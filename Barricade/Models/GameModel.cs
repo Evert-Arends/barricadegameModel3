@@ -10,8 +10,10 @@ namespace Barricade.Models
         public readonly List<BarricadePiece> BarricadePieces = new List<BarricadePiece>(6);
         private readonly List<Player> _players = new List<Player>(AmountOfPlayers);
         public Field[][] Fields { get; private set; }
-        private Piece _activePiece;
 
+        // Not just an active player because barriers don't have those.
+        private Piece _activePiece;
+        private Player _activePlayer;
         public readonly Die Die = new Die();
 
         private int _playerTurnNumber;
@@ -120,13 +122,8 @@ namespace Barricade.Models
         {
             var legalMove = MoveAllowed(_activePiece.PieceField, connectedField);
             if (!legalMove) return false;
-            // need to implement Count and null check everywhere
-            _activePiece.PieceField.Pieces.Remove(_activePiece);
-            // Stack with the walked fields
-            _activePiece.FieldsWalked.Push(_activePiece.PieceField);
 
-            _activePiece.PieceField = connectedField;
-            _activePiece.PieceField.Pieces.Add(_activePiece);
+            MovePieceToNewField(_activePiece, connectedField);
             Die.RemoveOneEye();
 
             return true;
@@ -153,24 +150,43 @@ namespace Barricade.Models
 
         public void MoveDone()
         {
-            // This does not matter for barricades, because die should be 0 anyway
+            // This does not matter for barricades, because the die is 0 then anyway.
             if (Die.ThrowAmount != 0)
             {
+                // If player can't move skip this player.
+                if (Die.ThrowAmount.Equals(Die.ArchivedThrowAmount))
+                {
+                    NextPlayer();
+                    return;
+                }
+
                 // Pressing enter when you're not done resets the piece to start position.
                 ResetPiece(_activePiece);
                 return;
             }
 
-            if (_activePiece.PieceField.Pieces.Count > 1)
+            if (_activePiece.PieceField.Pieces.Count > 1 && !(_activePiece.PieceField is WoodField))
             {
                 // Check if it's a barricade and revert all, or slay a piece.
                 if (_activePiece.PieceField.Pieces[0] is BarricadePiece)
                 {
                     MoveBarrier(_activePiece.PieceField.Pieces[0] as BarricadePiece);
                 }
-                else
+                else if (_activePiece.PieceField.Pieces[0] is PlayerPiece playerPiece)
                 {
-                    // Slay player and move it home
+                    // Check if the piece on the field is from the player or not.
+                    if (_activePlayer.PlayerPieces.Contains(playerPiece.PieceField.Pieces[0]) ||
+                        _activePiece.PieceField is RestField)
+                    {
+                        // Reset because you can't have two of the same pieces one one field except woods.
+                        // Can't slay on a rest piece.
+                        ResetPiece(_activePiece);
+                        return;
+                    }
+
+                    // Move the other piece back to home.
+                    playerPiece.StartOutField = null;
+                    MovePieceToNewField(playerPiece, playerPiece.StartField);
                     NextPlayer();
                 }
             }
@@ -179,6 +195,14 @@ namespace Barricade.Models
                 NextPlayer();
             }
         }
+
+        private static void MovePieceToNewField(Piece piece, Field fieldTo)
+        {
+            piece.PieceField.Pieces.Remove(piece);
+            piece.PieceField = fieldTo;
+            piece.PieceField.Pieces.Add(piece);
+        }
+
 
         private void NextPlayer()
         {
@@ -190,17 +214,17 @@ namespace Barricade.Models
             {
                 SetPieceActive(_players[_playerTurnNumber].ActivePlayerPiece =
                     _players[_playerTurnNumber].PlayerPieces[0]);
-
+                _activePlayer = _players[_playerTurnNumber];
                 _playerTurnNumber++;
 
                 if (_playerTurnNumber == _players.Count)
                 {
                     _playerTurnNumber = 0;
                 }
-                
+
                 // Set the backup location
                 _activePiece.StartOutField = _activePiece.PieceField;
-                
+
                 Die.ThrowDie();
             }
         }
@@ -209,6 +233,13 @@ namespace Barricade.Models
         {
             if (_activePiece is PlayerPiece activePiece)
             {
+                // Not allowed to walk with different pieces when you already walked with one.
+                if (!Die.ThrowAmount.Equals(Die.ArchivedThrowAmount))
+                {
+                    return;
+                }
+
+
                 var index = _players[_playerTurnNumber].PlayerPieces.FindIndex(a => a == activePiece);
                 if (index == _players[_playerTurnNumber].PlayerPieces.Count)
                 {
@@ -283,6 +314,7 @@ namespace Barricade.Models
                 // subtract one because the config file starts from 1 and not 0
                 _players[toInt - 1].PlayerPieces.Add(piece);
                 _players[toInt - 1].StartFields.Add(field);
+                piece.PieceOwner = _players[toInt - 1];
             }
 
             return field;
