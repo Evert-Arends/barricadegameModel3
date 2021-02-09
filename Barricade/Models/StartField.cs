@@ -8,7 +8,7 @@ namespace Barricade.Models
         public StartField()
         {
             // All fields except woods are only allowed once piece.
-            Pieces = new List<Piece>(1);
+            Pieces = new List<Piece>();
         }
 
         public override string ToString()

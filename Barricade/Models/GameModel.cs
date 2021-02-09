@@ -50,15 +50,15 @@ namespace Barricade.Models
                 return false;
             }
 
-            switch (fieldTo)
-            {
-                // no amount check needed for woods.
-                case WoodField _:
-                    return true;
-                // Barriers not on rest fields
-                case RestField _:
-                    return !(_activePiece is BarricadePiece);
-            }
+            // switch (fieldTo)
+            // {
+            //     // no amount check needed for woods.
+            //     case WoodField _:
+            //         return true;
+            //     // Barriers not on rest fields
+            //     case RestField _:
+            //         return !(_activePiece is BarricadePiece);
+            // }
 
             if (fieldTo.Pieces == null)
             {
@@ -68,6 +68,11 @@ namespace Barricade.Models
             if (_activePiece is BarricadePiece)
             {
                 if (fieldTo.Pieces.Count > 1)
+                {
+                    return false;
+                }
+
+                if (fieldTo is FinishField && _activePiece is BarricadePiece)
                 {
                     return false;
                 }
@@ -132,6 +137,8 @@ namespace Barricade.Models
         private void SetPieceActive(Piece piece)
         {
             _activePiece = piece;
+            // For reset purposes.
+            _activePiece.StartOutField = _activePiece.PieceField;
         }
 
         private void ResetPiece(Piece piece)
@@ -140,7 +147,7 @@ namespace Barricade.Models
             piece.PieceField.Pieces.Remove(piece);
             // New reference
             piece.PieceField = piece.StartOutField;
-            piece.StartOutField.Pieces.Add(piece);
+            if (piece.StartOutField.Pieces != null) piece.StartOutField.Pieces.Add(piece);
 
             if (piece is PlayerPiece)
             {
@@ -161,6 +168,12 @@ namespace Barricade.Models
                 }
 
                 // Pressing enter when you're not done resets the piece to start position.
+                ResetPiece(_activePiece);
+                return;
+            }
+
+            if (_activePiece.PieceField is RestField && _activePiece is BarricadePiece)
+            {
                 ResetPiece(_activePiece);
                 return;
             }
@@ -231,7 +244,7 @@ namespace Barricade.Models
 
         public void NextPiece()
         {
-            if (_activePiece is PlayerPiece activePiece)
+            if (_activePiece is PlayerPiece)
             {
                 // Not allowed to walk with different pieces when you already walked with one.
                 if (!Die.ThrowAmount.Equals(Die.ArchivedThrowAmount))
@@ -239,16 +252,16 @@ namespace Barricade.Models
                     return;
                 }
 
-
-                var index = _players[_playerTurnNumber].PlayerPieces.FindIndex(a => a == activePiece);
-                if (index == _players[_playerTurnNumber].PlayerPieces.Count)
+                var index = _activePlayer.PlayerPieces.FindIndex(a => a == _activePiece);
+                index++;
+                if (index >= _activePlayer.PlayerPieces.Count)
                 {
                     index = 0;
                 }
 
                 if (index >= 0)
                 {
-                    _activePiece = _players[_playerTurnNumber].PlayerPieces[index + 1];
+                    SetPieceActive(_activePlayer.PlayerPieces[index]);
                 }
             }
         }
@@ -271,9 +284,7 @@ namespace Barricade.Models
                     var fieldX = i / 2;
                     var fieldY = j / 2;
                     var currentField = Fields[fieldX][fieldY] = CreateField(field[i][j]);
-
-                    // CheckTypeAndAssign(currentField);
-
+                    
                     if (j != 0 && currentField != null)
                     {
                         var previousField = Fields[fieldX][fieldY - 1];
@@ -296,8 +307,33 @@ namespace Barricade.Models
                     }
                 }
             }
+
+            SeparateStartFields();
         }
 
+        private void SeparateStartFields()
+        {
+            foreach (var player in _players)
+            {
+                Field normalField = null;
+                foreach (var playerStartField in player.StartFields)
+                {
+                    if (playerStartField.TopConnectedField is NormalField normal)
+                    {
+                        normalField = normal;
+                        break;
+                    }
+                }
+
+                foreach (var playerStartField in player.StartFields)
+                {
+                    playerStartField.TopConnectedField = normalField;
+                    playerStartField.LeftConnectedField = null;
+                    playerStartField.RightConnectedField = null;
+                    playerStartField.DownConnectedField = null;
+                }
+            }
+        }
 
         private Field SetupPlayerField(char item)
         {
