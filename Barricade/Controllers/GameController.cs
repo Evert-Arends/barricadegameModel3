@@ -4,13 +4,13 @@ using System.Linq;
 using Barricade.Models;
 using Barricade.Views;
 
+//set Abstract data structure 
 namespace Barricade.Controllers
 {
     public class GameController
     {
         private readonly GameView _gameView;
         private readonly GameModel _gameModel;
-
         public GameController(string[] lines)
         {
             _gameModel = new GameModel();
@@ -22,13 +22,17 @@ namespace Barricade.Controllers
 
         public void RunGame()
         {
-            GameView.PrintCurrentGameState(ViewData());
+            _gameView.PrintCurrentGameState(ViewData());
             PieceMovement();
         }
 
-
         private string[] ViewData()
         {
+            if (_gameModel.WinningPlayer != null)
+            {
+                _gameView.PrintWinner(_gameModel.WinningPlayer.ToString());
+            }
+
             var list = new List<string>();
             if (_gameModel.BarricadePieces.Count > 0)
             {
@@ -37,7 +41,7 @@ namespace Barricade.Controllers
             else
             {
                 list.Add(new string($"You have {_gameModel.Die.ThrowAmount.ToString()} steps left"));
-
+                list.Add(new string($"Current active player: {_gameModel.GetActivePlayerName()}"));
             }
 
             foreach (var field in _gameModel.Fields)
@@ -67,45 +71,14 @@ namespace Barricade.Controllers
             return fieldCharacter + connectionCharacter;
         }
 
-        public void PieceMovement()
+        private void PieceMovement()
         {
-            var oldModel = _gameModel;
             var run = true;
+
             while (run)
             {
-                GameView.PrintCurrentGameState(ViewData());
-                var key = Console.ReadKey().Key;
-                switch (key)
-                {
-                    //TODO move to view
-                    case ConsoleKey.DownArrow:
-                        Console.WriteLine("Down arrow pressed");
-                        Console.WriteLine(_gameModel.MovePieceDown().ToString());
-                        break;
-                    case ConsoleKey.UpArrow:
-                        Console.WriteLine("Up arrow pressed");
-                        Console.WriteLine(_gameModel.MovePieceUp().ToString());
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        Console.WriteLine("Left arrow pressed");
-                        Console.WriteLine(_gameModel.MovePieceLeft().ToString());
-                        break;
-                    case ConsoleKey.RightArrow:
-                        Console.WriteLine("Right arrow pressed");
-                        Console.WriteLine(_gameModel.MovePieceRight().ToString());
-                        break;
-                    case ConsoleKey.N:
-                        Console.WriteLine("Next Piece requested");
-                        _gameModel.NextPiece();
-                        break;
-                    case ConsoleKey.Enter:
-                        _gameModel.MoveDone();
-                        break;
-                    case ConsoleKey.S:
-                        Console.WriteLine("Stopping");
-                        run = false;
-                        break;
-                }
+                Key pressedKey = _gameView.ListenForKeys();
+                _gameView.PrintCurrentGameState(ViewData());
             }
         }
     }

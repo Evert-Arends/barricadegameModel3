@@ -9,7 +9,6 @@ abstract class Piece {
 }
 Piece --> "PieceField" Field
 Piece --> "StartOutField" Field
-Piece o-> "FieldsWalked" Stack
 class WoodField {
     + WoodField()
     + <<override>> ToString() : string
@@ -51,6 +50,7 @@ class GameModel {
     + GameModel()
     + MoveBarriers() : void
     - MoveBarrier(barricadePiece:BarricadePiece) : void
+    + GetActivePlayerName() : string
     - MoveAllowed(fieldFrom:Field, fieldTo:Field) : bool
     + MovePieceUp() : bool
     + MovePieceDown() : bool
@@ -60,9 +60,11 @@ class GameModel {
     - SetPieceActive(piece:Piece) : void
     - ResetPiece(piece:Piece) : void
     + MoveDone() : void
+    - {static} MovePieceToNewField(piece:Piece, fieldTo:Field) : void
     - NextPlayer() : void
     + NextPiece() : void
     + GenerateBoardField(lines:string[]) : void
+    - SeparateStartFields() : void
     - SetupPlayerField(item:char) : Field
     - AddBarricadeToField() : Field
     - CreateField(toString:char) : Field
@@ -73,6 +75,8 @@ class "List`1"<T> {
 GameModel o-> "BarricadePieces<BarricadePiece>" "List`1"
 GameModel o-> "_players<Player>" "List`1"
 GameModel --> "_activePiece" Piece
+GameModel --> "_activePlayer" Player
+GameModel --> "WinningPlayer" Player
 GameModel o-> "Die" Die
 class StartField {
     + StartField()
@@ -87,8 +91,12 @@ Field <|-- RestField
 class PlayerPiece {
     + PlayerPiece(name:string)
 }
+class "List`1"<T> {
+}
 Piece <|-- PlayerPiece
 PlayerPiece --> "StartField" StartField
+PlayerPiece --> "PieceOwner" Player
+PlayerPiece --> "TaggedFields<Field>" "List`1"
 class BarricadePiece {
     + BarricadePiece(name:string)
 }
@@ -103,7 +111,8 @@ class NormalField {
 }
 Field <|-- NormalField
 class GameView {
-    + {static} PrintCurrentGameState(lines:IEnumerable<string>) : void
+    + PrintCurrentGameState(lines:IEnumerable<string>) : void
+    + PrintWinner(winner:string) : void
 }
 class GameController {
     + GameController(lines:string[])
@@ -111,7 +120,7 @@ class GameController {
     - ViewData() : string[]
     - {static} ToVerticalConnectionString(field:Field) : string
     - {static} ToSquareConnectionString(field:Field) : string
-    + PieceMovement() : void
+    - PieceMovement() : void
 }
 GameController --> "_gameView" GameView
 GameController --> "_gameModel" GameModel

@@ -2,6 +2,10 @@
 class PlayerPiece {
     + PlayerPiece(name:string)
 }
+class "List`1"<T> {
+}
 Piece <|-- PlayerPiece
 PlayerPiece --> "StartField" StartField
+PlayerPiece --> "PieceOwner" Player
+PlayerPiece --> "TaggedFields<Field>" "List`1"
 @enduml

@@ -5,7 +5,7 @@ class GameController {
     - ViewData() : string[]
     - {static} ToVerticalConnectionString(field:Field) : string
     - {static} ToSquareConnectionString(field:Field) : string
-    + PieceMovement() : void
+    - PieceMovement() : void
 }
 GameController --> "_gameView" GameView
 GameController --> "_gameModel" GameModel

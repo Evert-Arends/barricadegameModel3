@@ -1,5 +1,6 @@
 @startuml
 class GameView {
-    + {static} PrintCurrentGameState(lines:IEnumerable<string>) : void
+    + PrintCurrentGameState(lines:IEnumerable<string>) : void
+    + PrintWinner(winner:string) : void
 }
 @enduml

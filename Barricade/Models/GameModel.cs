@@ -14,8 +14,10 @@ namespace Barricade.Models
         // Not just an active player because barriers don't have those.
         private Piece _activePiece;
         private Player _activePlayer;
+        public Player WinningPlayer;
+        
         public readonly Die Die = new Die();
-
+        
         private int _playerTurnNumber;
 
         public GameModel()
@@ -37,6 +39,10 @@ namespace Barricade.Models
         {
             SetPieceActive(barricadePiece);
         }
+        public string GetActivePlayerName()
+        {
+            return _activePlayer.GetName();
+        }
 
         private bool MoveAllowed(Field fieldFrom, Field fieldTo)
         {
@@ -49,16 +55,6 @@ namespace Barricade.Models
             {
                 return false;
             }
-
-            // switch (fieldTo)
-            // {
-            //     // no amount check needed for woods.
-            //     case WoodField _:
-            //         return true;
-            //     // Barriers not on rest fields
-            //     case RestField _:
-            //         return !(_activePiece is BarricadePiece);
-            // }
 
             if (fieldTo.Pieces == null)
             {

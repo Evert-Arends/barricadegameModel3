@@ -5,6 +5,7 @@ class GameModel {
     + GameModel()
     + MoveBarriers() : void
     - MoveBarrier(barricadePiece:BarricadePiece) : void
+    + GetActivePlayerName() : string
     - MoveAllowed(fieldFrom:Field, fieldTo:Field) : bool
     + MovePieceUp() : bool
     + MovePieceDown() : bool
@@ -14,9 +15,11 @@ class GameModel {
     - SetPieceActive(piece:Piece) : void
     - ResetPiece(piece:Piece) : void
     + MoveDone() : void
+    - {static} MovePieceToNewField(piece:Piece, fieldTo:Field) : void
     - NextPlayer() : void
     + NextPiece() : void
     + GenerateBoardField(lines:string[]) : void
+    - SeparateStartFields() : void
     - SetupPlayerField(item:char) : Field
     - AddBarricadeToField() : Field
     - CreateField(toString:char) : Field
@@ -27,5 +30,7 @@ class "List`1"<T> {
 GameModel o-> "BarricadePieces<BarricadePiece>" "List`1"
 GameModel o-> "_players<Player>" "List`1"
 GameModel --> "_activePiece" Piece
+GameModel --> "_activePlayer" Player
+GameModel --> "WinningPlayer" Player
 GameModel o-> "Die" Die
 @enduml

@@ -5,5 +5,4 @@ abstract class Piece {
 }
 Piece --> "PieceField" Field
 Piece --> "StartOutField" Field
-Piece o-> "FieldsWalked" Stack
 @enduml

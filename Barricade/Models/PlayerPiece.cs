@@ -9,6 +9,13 @@ namespace Barricade.Models
         
         public List<Field> TaggedFields { get; set; }
 
+        public new bool MoveAllowed()
+        {
+            if (base.MoveAllowed())
+            {
+                
+            }
+        }
         public PlayerPiece(string name)
         {
             Name = name;
