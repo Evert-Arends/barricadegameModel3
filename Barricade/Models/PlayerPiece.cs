@@ -13,8 +13,10 @@ namespace Barricade.Models
         {
             if (base.MoveAllowed())
             {
-                
+                return false;
             }
+
+            return false;
         }
         public PlayerPiece(string name)
         {

@@ -41,7 +41,7 @@ namespace Barricade.Models
         }
         public string GetActivePlayerName()
         {
-            return _activePlayer.GetName();
+            return _activePlayer?.GetName();
         }
 
         private bool MoveAllowed(Field fieldFrom, Field fieldTo)

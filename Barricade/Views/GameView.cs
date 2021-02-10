@@ -28,12 +28,12 @@ namespace Barricade.Views
                 {ConsoleKey.DownArrow, Key.Down},
                 {ConsoleKey.UpArrow, Key.Up},
                 {ConsoleKey.LeftArrow, Key.Left},
-                {ConsoleKey.RightArrow, Key.Right}
+                {ConsoleKey.RightArrow, Key.Right},
+                {ConsoleKey.Enter, Key.Enter},
+                {ConsoleKey.S, Key.Stop},
+                {ConsoleKey.N, Key.Next},
             };
-            if (berm.ContainsKey(key))
-            {
-                return berm[key];
-            }
+            return berm[key];
         }
 
 

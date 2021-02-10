@@ -7,6 +7,7 @@ namespace Barricade.Views
         Left,
         Right,
         Stop,
-        Next
+        Next,
+        Enter
     }
 }

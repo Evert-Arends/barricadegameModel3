@@ -11,6 +11,7 @@ namespace Barricade.Controllers
     {
         private readonly GameView _gameView;
         private readonly GameModel _gameModel;
+
         public GameController(string[] lines)
         {
             _gameModel = new GameModel();
@@ -78,6 +79,31 @@ namespace Barricade.Controllers
             while (run)
             {
                 Key pressedKey = _gameView.ListenForKeys();
+                switch (pressedKey)
+                {
+                    case Key.Down:
+                        _gameModel.MovePieceDown();
+                        break;
+                    case Key.Left:
+                        _gameModel.MovePieceLeft();
+                        break;
+                    case Key.Right:
+                        _gameModel.MovePieceRight();
+                        break;
+                    case Key.Up:
+                        _gameModel.MovePieceUp();
+                        break;
+                    case Key.Stop:
+                        run = false;
+                        break;
+                    case Key.Next:
+                        _gameModel.NextPiece();
+                        break;
+                    case Key.Enter:
+                        _gameModel.MoveDone();
+                        break;
+                }
+
                 _gameView.PrintCurrentGameState(ViewData());
             }
         }
