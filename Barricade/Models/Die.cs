@@ -4,27 +4,27 @@ namespace Barricade.Models
 {
     public class Die
     {
-        public int ThrowAmount;
-        public int ArchivedThrowAmount;
+        public int MovesRemaining;
+        public int ArchivedMovesRemaining;
 
         public void ThrowDie()
         {
             var r = new Random();
-            ThrowAmount = r.Next(1, 6);
-            ArchivedThrowAmount = ThrowAmount;
+            MovesRemaining = r.Next(1, 7);
+            ArchivedMovesRemaining = MovesRemaining;
         }
 
-        public void RemoveOneEye()
+        public void RemoveOneMove()
         {
-            if (ThrowAmount > 0)
+            if (MovesRemaining > 0)
             {
-                ThrowAmount--;
+                MovesRemaining--;
             }
         }
 
-        public void RevertThrownAmount()
+        public void RevertMoveAmount()
         {
-            ThrowAmount = ArchivedThrowAmount;
+            MovesRemaining = ArchivedMovesRemaining;
         }
     }
 }

@@ -15,9 +15,9 @@ namespace Barricade.Models
         private Piece _activePiece;
         private Player _activePlayer;
         public Player WinningPlayer;
-        
+
         public readonly Die Die = new Die();
-        
+
         private int _playerTurnNumber;
 
         public GameModel()
@@ -39,60 +39,15 @@ namespace Barricade.Models
         {
             SetPieceActive(barricadePiece);
         }
+
         public string GetActivePlayerName()
         {
             return _activePlayer?.GetName();
         }
 
-        private bool MoveAllowed(Field fieldFrom, Field fieldTo)
+        private bool MoveAllowed(Field fieldTo)
         {
-            if (fieldFrom == null || fieldTo == null)
-            {
-                return false;
-            }
-
-            if (_activePiece is PlayerPiece && Die.ThrowAmount == 0)
-            {
-                return false;
-            }
-
-            if (fieldTo.Pieces == null)
-            {
-                return true;
-            }
-
-            if (_activePiece is BarricadePiece)
-            {
-                if (fieldTo.Pieces.Count > 1)
-                {
-                    return false;
-                }
-
-                if (fieldTo is FinishField && _activePiece is BarricadePiece)
-                {
-                    return false;
-                }
-            }
-
-
-            if (fieldTo.Pieces.Count == 0)
-            {
-                return true;
-            }
-
-            if (fieldTo.Pieces.Count > 0)
-            {
-                return fieldTo.Pieces[0] switch
-                {
-                    // you can slay them, but you can't skip over them.
-                    BarricadePiece _ when Die.ThrowAmount == 1 => true,
-                    BarricadePiece _ => false,
-                    PlayerPiece _ => true,
-                    _ => true
-                };
-            }
-
-            return false;
+           return _activePiece.MoveAllowed(fieldTo, Die);
         }
 
         public bool MovePieceUp()
@@ -121,11 +76,11 @@ namespace Barricade.Models
 
         private bool MovePiece(Field connectedField)
         {
-            var legalMove = MoveAllowed(_activePiece.PieceField, connectedField);
+            var legalMove = MoveAllowed(connectedField);
             if (!legalMove) return false;
 
             MovePieceToNewField(_activePiece, connectedField);
-            Die.RemoveOneEye();
+            Die.RemoveOneMove();
 
             return true;
         }
@@ -147,17 +102,17 @@ namespace Barricade.Models
 
             if (piece is PlayerPiece)
             {
-                Die.RevertThrownAmount();
+                Die.RevertMoveAmount();
             }
         }
 
         public void MoveDone()
         {
             // This does not matter for barricades, because the die is 0 then anyway.
-            if (Die.ThrowAmount != 0)
+            if (Die.MovesRemaining != 0)
             {
                 // If player can't move skip this player.
-                if (Die.ThrowAmount.Equals(Die.ArchivedThrowAmount))
+                if (Die.MovesRemaining.Equals(Die.ArchivedMovesRemaining))
                 {
                     NextPlayer();
                     return;
@@ -243,7 +198,7 @@ namespace Barricade.Models
             if (_activePiece is PlayerPiece)
             {
                 // Not allowed to walk with different pieces when you already walked with one.
-                if (!Die.ThrowAmount.Equals(Die.ArchivedThrowAmount))
+                if (!Die.MovesRemaining.Equals(Die.ArchivedMovesRemaining))
                 {
                     return;
                 }
@@ -280,7 +235,7 @@ namespace Barricade.Models
                     var fieldX = i / 2;
                     var fieldY = j / 2;
                     var currentField = Fields[fieldX][fieldY] = CreateField(field[i][j]);
-                    
+
                     if (j != 0 && currentField != null)
                     {
                         var previousField = Fields[fieldX][fieldY - 1];

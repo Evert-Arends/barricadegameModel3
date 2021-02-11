@@ -6,6 +6,10 @@ namespace Barricade.Models
     public abstract class Field
     {
         public List<Piece> Pieces = new List<Piece>();
+        public virtual bool IsNotOccupied()
+        {
+            return Pieces == null || Pieces.Count == 0;
+        }
         // The piece that is showed when walking over it, but not staying _permanently_.
         public Piece TempPiece { get; set; }
         public Field LeftConnectedField { get; set; }

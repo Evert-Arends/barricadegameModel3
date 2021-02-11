@@ -9,3 +9,5 @@
 /home/berm/RiderProjects/BarricadeGameModl3/Barricade/obj/Debug/netcoreapp3.1/Barricade.AssemblyInfo.cs
 /home/berm/RiderProjects/BarricadeGameModl3/Barricade/obj/Debug/netcoreapp3.1/Barricade.dll
 /home/berm/RiderProjects/BarricadeGameModl3/Barricade/obj/Debug/netcoreapp3.1/Barricade.pdb
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/bin/Debug/netcoreapp3.1/Pastel.dll
+/home/berm/RiderProjects/BarricadeGameModl3/Barricade/obj/Debug/netcoreapp3.1/Barricade.csproj.CopyComplete

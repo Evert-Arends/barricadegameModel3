@@ -1,11 +1,41 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {}
+    ".NETCoreApp,Version=v3.1": {
+      "Pastel/2.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Pastel.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Pastel.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Pastel/2.1.0": {
+      "sha512": "CYPB5mCTGdmhaW7FyiYerq8S5S6Sz1pBJMC6XmmWvk/APiKjqmCc5vIn4XX++3E1w56LadBUDpicWBc2k84kmQ==",
+      "type": "package",
+      "path": "pastel/2.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "icon.png",
+        "lib/net5.0/Pastel.dll",
+        "lib/net5.0/Pastel.xml",
+        "lib/netstandard2.0/Pastel.dll",
+        "lib/netstandard2.0/Pastel.xml",
+        "pastel.2.1.0.nupkg.sha512",
+        "pastel.nuspec"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": []
+    ".NETCoreApp,Version=v3.1": [
+      "Pastel >= 2.1.0"
+    ]
   },
   "packageFolders": {
     "/home/berm/.nuget/packages/": {}
@@ -41,6 +71,12 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
+        "dependencies": {
+          "Pastel": {
+            "target": "Package",
+            "version": "[2.1.0, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

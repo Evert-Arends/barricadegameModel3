@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Barricade.Models;
 using Barricade.Views;
+using Pastel;
 
 //set Abstract data structure 
 namespace Barricade.Controllers
@@ -41,7 +43,7 @@ namespace Barricade.Controllers
             }
             else
             {
-                list.Add(new string($"You have {_gameModel.Die.ThrowAmount.ToString()} steps left"));
+                list.Add(new string($"You have {_gameModel.Die.MovesRemaining.ToString()} steps left"));
                 list.Add(new string($"Current active player: {_gameModel.GetActivePlayerName()}"));
             }
 
@@ -68,7 +70,17 @@ namespace Barricade.Controllers
         private static string ToSquareConnectionString(Field field)
         {
             var fieldCharacter = field?.ToString() ?? " ";
+
             var connectionCharacter = field?.RightConnectedField != null ? "-" : " ";
+
+            if(int.TryParse(fieldCharacter, out var parsedField))
+            {
+                fieldCharacter = fieldCharacter.Pastel(GameView.GetPlayerColor(parsedField));
+            }
+
+            fieldCharacter = fieldCharacter.Pastel(GameView.GetPieceColor(fieldCharacter));
+
+
             return fieldCharacter + connectionCharacter;
         }
 

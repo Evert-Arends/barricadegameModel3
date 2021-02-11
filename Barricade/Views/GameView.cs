@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Barricade.Views
 {
@@ -14,6 +15,37 @@ namespace Barricade.Views
             }
         }
 
+        public static Color GetPlayerColor(int number)
+        {
+            switch (number)
+            {
+                case 1:
+                    return Color.Red;
+                case 2:
+                    return Color.Green;
+                case 3:
+                    return Color.Blue;
+                case 4:
+                    return Color.Fuchsia;
+                default:
+                    return Color.White;
+            }
+        }
+        public static Color GetPieceColor(string piece)
+        {
+            switch (piece)
+            {
+                case "X":
+                    return Color.Tomato;
+                case "R":
+                    return Color.Yellow;
+                case "F":
+                    return Color.CornflowerBlue;
+                default:
+                    return Color.White;
+            }
+        }
+        
         public void PrintWinner(string winner)
         {
             Console.Clear();

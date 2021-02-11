@@ -6,18 +6,31 @@ namespace Barricade.Models
     {
         public StartField StartField { get; set; }
         public Player PieceOwner { get; set; }
-        
+
         public List<Field> TaggedFields { get; set; }
 
-        public new bool MoveAllowed()
+        public override bool MoveAllowed(Field fieldTo, Die die)
         {
-            if (base.MoveAllowed())
+            // You're allowed to slay a barricade when it's your last step
+
+            if (!base.MoveAllowed(fieldTo, die) || die.MovesRemaining == 0)
             {
                 return false;
             }
+            // Check null
+            if (fieldTo.IsNotOccupied())
+            {
+                return true;
+            }
+            // You're allowed to slay a barricade when it's your last step
+            if ((fieldTo.Pieces[0] is BarricadePiece) && die.MovesRemaining > 1)
+            {
+                return false;
+            }
+            return true;
 
-            return false;
         }
+
         public PlayerPiece(string name)
         {
             Name = name;
