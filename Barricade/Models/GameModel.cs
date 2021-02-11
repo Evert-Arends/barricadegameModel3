@@ -35,8 +35,9 @@ namespace Barricade.Models
         {
             if (BarricadePieces.Count <= 0) return;
 
-            MoveBarrier(BarricadePieces[0]);
-            BarricadePieces.Remove(BarricadePieces[0]);
+            var barrier = BarricadePieces.FirstOrDefault();
+            MoveBarrier(barrier);
+            BarricadePieces.Remove(barrier);
         }
 
         private void MoveBarrier(BarricadePiece barricadePiece)

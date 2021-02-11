@@ -39,7 +39,7 @@ namespace Barricade.Controllers
             var list = new List<string>();
             if (_gameModel.BarricadePieces.Count > 0)
             {
-                list.Add(new string($"You have {_gameModel.BarricadePieces.Count + 1} barricades to move"));
+                list.Add(new string($"You have {_gameModel.BarricadePieces.Count} barricades to move"));
             }
             else
             {
@@ -73,7 +73,7 @@ namespace Barricade.Controllers
 
             var connectionCharacter = field?.RightConnectedField != null ? "-" : " ";
 
-            if(int.TryParse(fieldCharacter, out var parsedField))
+            if (int.TryParse(fieldCharacter, out var parsedField))
             {
                 fieldCharacter = fieldCharacter.Pastel(GameView.GetPlayerColor(parsedField));
             }
