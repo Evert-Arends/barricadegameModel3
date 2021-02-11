@@ -9,9 +9,9 @@ abstract class Piece {
     + <<virtual>> NextPiece(die:Die) : Piece
     + <<override>> ToString() : string
 }
-class "List"<T> {
+class "List`1"<T> {
 }
-Piece --> "VisitedFields<Field>" "List"
+Piece --> "VisitedFields<Field>" "List`1"
 Piece --> "PieceField" Field
 Piece --> "StartOutField" Field
 class WoodField {
@@ -30,10 +30,9 @@ abstract class Field {
     + <<virtual>> Crowded() : bool
     + {abstract} <<override>> ToString() : string
 }
-class "List"<T> {
+class "List`1"<T> {
 }
-Field o-> "Pieces<Piece>" "List"
-Field --> "TempPiece" Piece
+Field o-> "Pieces<Piece>" "List`1"
 Field --> "LeftConnectedField" Field
 Field --> "RightConnectedField" Field
 Field --> "TopConnectedField" Field
@@ -42,10 +41,10 @@ class Player {
     + GetName() : string
     + OwnsPiece(piece:PlayerPiece) : bool
 }
-class "List"<T> {
+class "List`1"<T> {
 }
-Player o-> "StartFields<Field>" "List"
-Player o-> "PlayerPieces<PlayerPiece>" "List"
+Player o-> "StartFields<Field>" "List`1"
+Player o-> "PlayerPieces<PlayerPiece>" "List`1"
 Player --> "ActivePlayerPiece" PlayerPiece
 class Die {
     + MovesRemaining : int
@@ -85,10 +84,10 @@ class GameModel {
     - CreateField(toString:char) : Field
     - GeneratePlayers() : void
 }
-class "List"<T> {
+class "List`1"<T> {
 }
-GameModel o-> "BarricadePieces<BarricadePiece>" "List"
-GameModel o-> "_players<Player>" "List"
+GameModel o-> "BarricadePieces<BarricadePiece>" "List`1"
+GameModel o-> "_players<Player>" "List`1"
 GameModel --> "_activePiece" Piece
 GameModel --> "_activePlayer" Player
 GameModel --> "WinningPlayer" Player

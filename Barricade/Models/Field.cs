@@ -26,7 +26,6 @@ namespace Barricade.Models
         }
 
         // The piece that is showed when walking over it, but not staying _permanently_.
-        public Piece TempPiece { get; set; }
         public Field LeftConnectedField { get; set; }
         public Field RightConnectedField { get; set; }
         public Field TopConnectedField { get; set; }

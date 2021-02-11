@@ -13,8 +13,7 @@ namespace Barricade.Models
         public override string ToString()
         {
             //Pieces.Count Because there could be a temporary amount in here when some walks over the field
-            return TempPiece != null ? TempPiece.ToString() :
-                Pieces.Count <= 0 ? "N" : Pieces[Pieces.Count - 1].ToString();
+            return Pieces.Count <= 0 ? "N" : Pieces[Pieces.Count - 1].ToString();
         }
     }
 }

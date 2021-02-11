@@ -10,7 +10,6 @@ abstract class Field {
 class "List`1"<T> {
 }
 Field o-> "Pieces<Piece>" "List`1"
-Field --> "TempPiece" Piece
 Field --> "LeftConnectedField" Field
 Field --> "RightConnectedField" Field
 Field --> "TopConnectedField" Field
