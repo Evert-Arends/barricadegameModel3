@@ -11,6 +11,11 @@ namespace Barricade.Models
         {
             return PlayerPieces[0]?.ToString();
         }
+
+        public bool OwnsPiece(PlayerPiece piece)
+        {
+            return PlayerPieces.Contains(piece);
+        }
         public PlayerPiece ActivePlayerPiece { get; set; }
     }
 }

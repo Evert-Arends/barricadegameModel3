@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Barricade.Models
 {
@@ -14,6 +15,16 @@ namespace Barricade.Models
         public override bool IsNotOccupied()
         {
             return true;
+        }
+        public override bool Crowded()
+        {
+            // Woodfield is never crowded.
+            return false;
+        }
+
+        public override bool IsMoveAllowed()
+        {
+            return !Pieces.OfType<BarricadePiece>().Any();
         }
 
         public override string ToString()

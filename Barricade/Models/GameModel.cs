@@ -7,6 +7,8 @@ namespace Barricade.Models
     public class GameModel
     {
         private const int AmountOfPlayers = 4;
+        private const int FieldRowsInVillage = 5;
+        private const int BottomRowIndex = 8;
         public readonly List<BarricadePiece> BarricadePieces = new List<BarricadePiece>(6);
         private readonly List<Player> _players = new List<Player>(AmountOfPlayers);
         public Field[][] Fields { get; private set; }
@@ -15,6 +17,8 @@ namespace Barricade.Models
         private Piece _activePiece;
         private Player _activePlayer;
         public Player WinningPlayer;
+
+        private Field GameWoodField { get; set; }
 
         public readonly Die Die = new Die();
 
@@ -47,7 +51,7 @@ namespace Barricade.Models
 
         private bool MoveAllowed(Field fieldTo)
         {
-           return _activePiece.MoveAllowed(fieldTo, Die);
+            return _activePiece.MoveAllowed(fieldTo, Die);
         }
 
         public bool MovePieceUp()
@@ -80,6 +84,8 @@ namespace Barricade.Models
             if (!legalMove) return false;
 
             MovePieceToNewField(_activePiece, connectedField);
+            _activePiece.VisitedFields ??= new List<Field>();
+            _activePiece.VisitedFields.Add(connectedField);
             Die.RemoveOneMove();
 
             return true;
@@ -94,6 +100,7 @@ namespace Barricade.Models
 
         private void ResetPiece(Piece piece)
         {
+            piece.VisitedFields = new List<Field>();
             // Remove reference
             piece.PieceField.Pieces.Remove(piece);
             // New reference
@@ -108,10 +115,11 @@ namespace Barricade.Models
 
         public void MoveDone()
         {
+            var currentField = _activePiece.PieceField;
             // This does not matter for barricades, because the die is 0 then anyway.
             if (Die.MovesRemaining != 0)
             {
-                // If player can't move skip this player.
+                // If player can't move (stuck) skip this player.
                 if (Die.MovesRemaining.Equals(Die.ArchivedMovesRemaining))
                 {
                     NextPlayer();
@@ -123,24 +131,24 @@ namespace Barricade.Models
                 return;
             }
 
-            if (_activePiece.PieceField is RestField && _activePiece is BarricadePiece)
+            if (!currentField.IsMoveAllowed())
             {
                 ResetPiece(_activePiece);
                 return;
             }
 
-            if (_activePiece.PieceField.Pieces.Count > 1 && !(_activePiece.PieceField is WoodField))
+            if (currentField.Crowded())
             {
                 // Check if it's a barricade and revert all, or slay a piece.
-                if (_activePiece.PieceField.Pieces[0] is BarricadePiece)
+                if (currentField.Pieces.FirstOrDefault() is BarricadePiece barricadePiece)
                 {
-                    MoveBarrier(_activePiece.PieceField.Pieces[0] as BarricadePiece);
+                    MoveBarrier(barricadePiece);
                 }
-                else if (_activePiece.PieceField.Pieces[0] is PlayerPiece playerPiece)
+                else if (currentField.Pieces.FirstOrDefault() is PlayerPiece firstFieldPiece)
                 {
                     // Check if the piece on the field is from the player or not.
-                    if (_activePlayer.PlayerPieces.Contains(playerPiece.PieceField.Pieces[0]) ||
-                        _activePiece.PieceField is RestField)
+                    if (_activePlayer.OwnsPiece(firstFieldPiece) ||
+                        currentField is RestField)
                     {
                         // Reset because you can't have two of the same pieces one one field except woods.
                         // Can't slay on a rest piece.
@@ -149,8 +157,16 @@ namespace Barricade.Models
                     }
 
                     // Move the other piece back to home.
-                    playerPiece.StartOutField = null;
-                    MovePieceToNewField(playerPiece, playerPiece.StartField);
+                    firstFieldPiece.StartOutField = null;
+                    if (currentField.IsVillage)
+                    {
+                        MovePieceToNewField(firstFieldPiece, GameWoodField);
+                    }
+                    else
+                    {
+                        MovePieceToNewField(firstFieldPiece, firstFieldPiece.StartField);
+                    }
+
                     NextPlayer();
                 }
             }
@@ -176,6 +192,7 @@ namespace Barricade.Models
             }
             else
             {
+                _activePiece.VisitedFields = new List<Field>();
                 SetPieceActive(_players[_playerTurnNumber].ActivePlayerPiece =
                     _players[_playerTurnNumber].PlayerPieces[0]);
                 _activePlayer = _players[_playerTurnNumber];
@@ -195,25 +212,29 @@ namespace Barricade.Models
 
         public void NextPiece()
         {
-            if (_activePiece is PlayerPiece)
+            // Not allowed to walk with different pieces when you already walked with one.
+            if (Die.MovesRemaining.Equals(Die.ArchivedMovesRemaining))
             {
-                // Not allowed to walk with different pieces when you already walked with one.
-                if (!Die.MovesRemaining.Equals(Die.ArchivedMovesRemaining))
-                {
-                    return;
-                }
+                SetPieceActive(_activePiece.NextPiece(Die));
+            }
+        }
 
-                var index = _activePlayer.PlayerPieces.FindIndex(a => a == _activePiece);
-                index++;
-                if (index >= _activePlayer.PlayerPieces.Count)
+        private void AssignVillage()
+        {
+            for (int i = 1; i < FieldRowsInVillage; i++)
+            {
+                foreach (Field field in Fields[i])
                 {
-                    index = 0;
+                    if (field != null) field.IsVillage = true;
                 }
+            }
+        }
 
-                if (index >= 0)
-                {
-                    SetPieceActive(_activePlayer.PlayerPieces[index]);
-                }
+        private void AssignBottomRow()
+        {
+            foreach (Field field in Fields[BottomRowIndex])
+            {
+                field.IsBottomRow = true;
             }
         }
 
@@ -260,6 +281,8 @@ namespace Barricade.Models
             }
 
             SeparateStartFields();
+            AssignVillage();
+            AssignBottomRow();
         }
 
         private void SeparateStartFields()
@@ -318,6 +341,13 @@ namespace Barricade.Models
             return field;
         }
 
+        private WoodField GetWoodField()
+        {
+            WoodField woodField = new WoodField();
+            GameWoodField = woodField;
+            return woodField;
+        }
+
         private Field CreateField(char toString)
         {
             var field = new NormalField();
@@ -328,7 +358,7 @@ namespace Barricade.Models
                 case 'r': return new RestField();
                 case 'n': return new NormalField();
                 case 'f': return new FinishField();
-                case 'w': return new WoodField();
+                case 'w': return GetWoodField();
                 case 'x': return AddBarricadeToField();
                 case var e when items.Contains(e): return SetupPlayerField(e);
             }
