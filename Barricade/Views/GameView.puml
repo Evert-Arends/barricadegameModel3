@@ -1,6 +1,9 @@
 @startuml
 class GameView {
     + PrintCurrentGameState(lines:IEnumerable<string>) : void
+    + {static} GetPlayerColor(number:int) : Color
+    + {static} GetPieceColor(piece:string) : Color
     + PrintWinner(winner:string) : void
+    + ListenForKeys() : Key
 }
 @enduml

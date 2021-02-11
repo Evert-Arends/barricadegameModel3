@@ -1,12 +1,14 @@
 @startuml
 class GameModel {
     - <<const>> AmountOfPlayers : int = 4
+    - <<const>> FieldRowsInVillage : int = 5
+    - <<const>> BottomRowIndex : int = 8
     - _playerTurnNumber : int
     + GameModel()
     + MoveBarriers() : void
     - MoveBarrier(barricadePiece:BarricadePiece) : void
     + GetActivePlayerName() : string
-    - MoveAllowed(fieldFrom:Field, fieldTo:Field) : bool
+    - MoveAllowed(fieldTo:Field) : bool
     + MovePieceUp() : bool
     + MovePieceDown() : bool
     + MovePieceLeft() : bool
@@ -18,10 +20,13 @@ class GameModel {
     - {static} MovePieceToNewField(piece:Piece, fieldTo:Field) : void
     - NextPlayer() : void
     + NextPiece() : void
+    - AssignVillage() : void
+    - AssignBottomRow() : void
     + GenerateBoardField(lines:string[]) : void
     - SeparateStartFields() : void
     - SetupPlayerField(item:char) : Field
     - AddBarricadeToField() : Field
+    - GetWoodField() : WoodField
     - CreateField(toString:char) : Field
     - GeneratePlayers() : void
 }
@@ -32,5 +37,6 @@ GameModel o-> "_players<Player>" "List`1"
 GameModel --> "_activePiece" Piece
 GameModel --> "_activePlayer" Player
 GameModel --> "WinningPlayer" Player
+GameModel --> "GameWoodField" Field
 GameModel o-> "Die" Die
 @enduml

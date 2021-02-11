@@ -5,53 +5,65 @@ class Program {
 Program --> "_gameController" GameController
 abstract class Piece {
     # Name : string = ""
+    + <<virtual>> MoveAllowed(fieldTo:Field, die:Die) : bool
+    + <<virtual>> NextPiece(die:Die) : Piece
     + <<override>> ToString() : string
 }
+class "List"<T> {
+}
+Piece --> "VisitedFields<Field>" "List"
 Piece --> "PieceField" Field
 Piece --> "StartOutField" Field
 class WoodField {
     + WoodField()
+    + <<override>> IsNotOccupied() : bool
+    + <<override>> Crowded() : bool
+    + <<override>> IsMoveAllowed() : bool
     + <<override>> ToString() : string
 }
 Field <|-- WoodField
-class Village {
-}
-class "List`1"<T> {
-}
-Village o-> "Fields<Field>" "List`1"
 abstract class Field {
+    + <<virtual>> IsNotOccupied() : bool
+    + IsVillage : bool <<get>> <<set>>
+    + IsBottomRow : bool <<get>> <<set>>
+    + <<virtual>> IsMoveAllowed() : bool
+    + <<virtual>> Crowded() : bool
     + {abstract} <<override>> ToString() : string
 }
-class "List`1"<T> {
+class "List"<T> {
 }
-Field o-> "Pieces<Piece>" "List`1"
+Field o-> "Pieces<Piece>" "List"
 Field --> "TempPiece" Piece
 Field --> "LeftConnectedField" Field
 Field --> "RightConnectedField" Field
 Field --> "TopConnectedField" Field
 Field --> "DownConnectedField" Field
 class Player {
+    + GetName() : string
+    + OwnsPiece(piece:PlayerPiece) : bool
 }
-class "List`1"<T> {
+class "List"<T> {
 }
-Player o-> "StartFields<Field>" "List`1"
-Player o-> "PlayerPieces<PlayerPiece>" "List`1"
+Player o-> "StartFields<Field>" "List"
+Player o-> "PlayerPieces<PlayerPiece>" "List"
 Player --> "ActivePlayerPiece" PlayerPiece
 class Die {
-    + ThrowAmount : int
-    + ArchivedThrowAmount : int
+    + MovesRemaining : int
+    + ArchivedMovesRemaining : int
     + ThrowDie() : void
-    + RemoveOneEye() : void
-    + RevertThrownAmount() : void
+    + RemoveOneMove() : void
+    + RevertMoveAmount() : void
 }
 class GameModel {
     - <<const>> AmountOfPlayers : int = 4
+    - <<const>> FieldRowsInVillage : int = 5
+    - <<const>> BottomRowIndex : int = 8
     - _playerTurnNumber : int
     + GameModel()
     + MoveBarriers() : void
     - MoveBarrier(barricadePiece:BarricadePiece) : void
     + GetActivePlayerName() : string
-    - MoveAllowed(fieldFrom:Field, fieldTo:Field) : bool
+    - MoveAllowed(fieldTo:Field) : bool
     + MovePieceUp() : bool
     + MovePieceDown() : bool
     + MovePieceLeft() : bool
@@ -63,20 +75,24 @@ class GameModel {
     - {static} MovePieceToNewField(piece:Piece, fieldTo:Field) : void
     - NextPlayer() : void
     + NextPiece() : void
+    - AssignVillage() : void
+    - AssignBottomRow() : void
     + GenerateBoardField(lines:string[]) : void
     - SeparateStartFields() : void
     - SetupPlayerField(item:char) : Field
     - AddBarricadeToField() : Field
+    - GetWoodField() : WoodField
     - CreateField(toString:char) : Field
     - GeneratePlayers() : void
 }
-class "List`1"<T> {
+class "List"<T> {
 }
-GameModel o-> "BarricadePieces<BarricadePiece>" "List`1"
-GameModel o-> "_players<Player>" "List`1"
+GameModel o-> "BarricadePieces<BarricadePiece>" "List"
+GameModel o-> "_players<Player>" "List"
 GameModel --> "_activePiece" Piece
 GameModel --> "_activePlayer" Player
 GameModel --> "WinningPlayer" Player
+GameModel --> "GameWoodField" Field
 GameModel o-> "Die" Die
 class StartField {
     + StartField()
@@ -85,20 +101,21 @@ class StartField {
 Field <|-- StartField
 class RestField {
     + RestField()
+    + <<override>> IsMoveAllowed() : bool
     + <<override>> ToString() : string
 }
 Field <|-- RestField
 class PlayerPiece {
+    + <<override>> MoveAllowed(fieldTo:Field, die:Die) : bool
+    + <<override>> NextPiece(die:Die) : Piece
     + PlayerPiece(name:string)
-}
-class "List`1"<T> {
 }
 Piece <|-- PlayerPiece
 PlayerPiece --> "StartField" StartField
 PlayerPiece --> "PieceOwner" Player
-PlayerPiece --> "TaggedFields<Field>" "List`1"
 class BarricadePiece {
     + BarricadePiece(name:string)
+    + <<override>> MoveAllowed(fieldTo:Field, die:Die) : bool
 }
 Piece <|-- BarricadePiece
 class FinishField {
@@ -112,7 +129,19 @@ class NormalField {
 Field <|-- NormalField
 class GameView {
     + PrintCurrentGameState(lines:IEnumerable<string>) : void
+    + {static} GetPlayerColor(number:int) : Color
+    + {static} GetPieceColor(piece:string) : Color
     + PrintWinner(winner:string) : void
+    + ListenForKeys() : Key
+}
+enum Key {
+    Up,
+    Down,
+    Left,
+    Right,
+    Stop,
+    Next,
+    Enter,
 }
 class GameController {
     + GameController(lines:string[])
@@ -120,6 +149,7 @@ class GameController {
     - ViewData() : string[]
     - {static} ToVerticalConnectionString(field:Field) : string
     - {static} ToSquareConnectionString(field:Field) : string
+    - PlayerWon() : bool
     - PieceMovement() : void
 }
 GameController --> "_gameView" GameView

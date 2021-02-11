@@ -117,6 +117,13 @@ namespace Barricade.Models
         public void MoveDone()
         {
             var currentField = _activePiece.PieceField;
+
+            if (currentField is FinishField)
+            {
+                WinningPlayer = _activePlayer;
+                return;
+            }
+
             // This does not matter for barricades, because the die is 0 then anyway.
             if (Die.MovesRemaining != 0)
             {
@@ -337,7 +344,9 @@ namespace Barricade.Models
             NormalField field = new NormalField();
             field.Pieces.Add(piece);
             piece.PieceField = field;
-
+            // If null create it
+            piece.VisitedFields ??= new List<Field>();
+            piece.VisitedFields.Add(field);
             BarricadePieces.Add(piece);
             return field;
         }

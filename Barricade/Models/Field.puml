@@ -1,5 +1,10 @@
 @startuml
 abstract class Field {
+    + <<virtual>> IsNotOccupied() : bool
+    + IsVillage : bool <<get>> <<set>>
+    + IsBottomRow : bool <<get>> <<set>>
+    + <<virtual>> IsMoveAllowed() : bool
+    + <<virtual>> Crowded() : bool
     + {abstract} <<override>> ToString() : string
 }
 class "List`1"<T> {

@@ -1,6 +1,7 @@
 @startuml
 class RestField {
     + RestField()
+    + <<override>> IsMoveAllowed() : bool
     + <<override>> ToString() : string
 }
 Field <|-- RestField

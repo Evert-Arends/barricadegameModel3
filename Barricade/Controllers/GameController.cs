@@ -84,6 +84,17 @@ namespace Barricade.Controllers
             return fieldCharacter + connectionCharacter;
         }
 
+
+        private bool PlayerWon()
+        {
+            if (_gameModel.WinningPlayer != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         private void PieceMovement()
         {
             var run = true;
@@ -116,7 +127,15 @@ namespace Barricade.Controllers
                         break;
                 }
 
-                _gameView.PrintCurrentGameState(ViewData());
+                if (PlayerWon())
+                {
+                    _gameView.PrintWinner(_gameModel.WinningPlayer.GetName());
+                    run = false;
+                }
+                else
+                {
+                    _gameView.PrintCurrentGameState(ViewData());
+                }
             }
         }
     }

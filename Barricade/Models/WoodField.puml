@@ -1,6 +1,9 @@
 @startuml
 class WoodField {
     + WoodField()
+    + <<override>> IsNotOccupied() : bool
+    + <<override>> Crowded() : bool
+    + <<override>> IsMoveAllowed() : bool
     + <<override>> ToString() : string
 }
 Field <|-- WoodField

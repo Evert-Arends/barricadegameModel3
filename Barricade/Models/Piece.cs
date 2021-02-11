@@ -14,7 +14,7 @@ namespace Barricade.Models
 
         // The field that the piece starts out on.
         public Field StartOutField { get; set; }
-
+    
         public virtual bool MoveAllowed(Field fieldTo, Die die)
         {
             if (fieldTo != null)

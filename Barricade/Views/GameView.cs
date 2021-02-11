@@ -31,6 +31,7 @@ namespace Barricade.Views
                     return Color.White;
             }
         }
+
         public static Color GetPieceColor(string piece)
         {
             switch (piece)
@@ -45,7 +46,7 @@ namespace Barricade.Views
                     return Color.White;
             }
         }
-        
+
         public void PrintWinner(string winner)
         {
             Console.Clear();
@@ -65,7 +66,7 @@ namespace Barricade.Views
                 {ConsoleKey.S, Key.Stop},
                 {ConsoleKey.N, Key.Next},
             };
-            return berm[key];
+            return berm.ContainsKey(key) ? berm[key] : ListenForKeys();
         }
 
 

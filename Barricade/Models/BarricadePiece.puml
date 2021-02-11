@@ -1,6 +1,7 @@
 @startuml
 class BarricadePiece {
     + BarricadePiece(name:string)
+    + <<override>> MoveAllowed(fieldTo:Field, die:Die) : bool
 }
 Piece <|-- BarricadePiece
 @enduml

@@ -1,8 +1,13 @@
 @startuml
 abstract class Piece {
     # Name : string = ""
+    + <<virtual>> MoveAllowed(fieldTo:Field, die:Die) : bool
+    + <<virtual>> NextPiece(die:Die) : Piece
     + <<override>> ToString() : string
 }
+class "List`1"<T> {
+}
+Piece --> "VisitedFields<Field>" "List`1"
 Piece --> "PieceField" Field
 Piece --> "StartOutField" Field
 @enduml

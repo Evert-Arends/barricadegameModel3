@@ -1,11 +1,10 @@
 @startuml
 class PlayerPiece {
+    + <<override>> MoveAllowed(fieldTo:Field, die:Die) : bool
+    + <<override>> NextPiece(die:Die) : Piece
     + PlayerPiece(name:string)
-}
-class "List`1"<T> {
 }
 Piece <|-- PlayerPiece
 PlayerPiece --> "StartField" StartField
 PlayerPiece --> "PieceOwner" Player
-PlayerPiece --> "TaggedFields<Field>" "List`1"
 @enduml

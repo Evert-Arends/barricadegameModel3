@@ -1,5 +1,7 @@
 @startuml
 class Player {
+    + GetName() : string
+    + OwnsPiece(piece:PlayerPiece) : bool
 }
 class "List`1"<T> {
 }
