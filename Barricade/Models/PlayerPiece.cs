@@ -33,7 +33,6 @@ namespace Barricade.Models
 
         public override Piece NextPiece(Die die)
         {
-
             // retrieve current position in array and add one to get the next piece.
             var index = PieceOwner.PlayerPieces.FindIndex(a => a == this);
             index++;
